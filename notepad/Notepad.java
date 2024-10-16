@@ -9,6 +9,7 @@ import java.net.NoRouteToHostException;
 
 public class Notepad extends JFrame implements ActionListener {
     JTextArea area;
+    String text;
     Notepad() {
         setTitle("Notepad");
         ImageIcon notepadIcon = new ImageIcon(ClassLoader.getSystemResource("notepad/icons/notepad.png"));
@@ -38,10 +39,12 @@ public class Notepad extends JFrame implements ActionListener {
         file.add(save);
 
         JMenuItem print = new JMenuItem("Print");
+        print.addActionListener(this);
         print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
         file.add(print);
 
         JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener(this);
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, ActionEvent.CTRL_MASK));
         file.add(exit);
 
@@ -51,29 +54,35 @@ public class Notepad extends JFrame implements ActionListener {
         edit.setFont(new Font("AERIAL", Font.PLAIN, 14));
 
         JMenuItem copy = new JMenuItem("Copy");
+        copy.addActionListener(this);
         copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         edit.add(copy);
 
         JMenuItem paste = new JMenuItem("Paste");
+        paste.addActionListener(this);
         paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
         edit.add(paste);
 
         JMenuItem cut = new JMenuItem("Cut");
+        cut.addActionListener(this);
         cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         edit.add(cut);
 
         JMenuItem selectAll = new JMenuItem("Select All");
+        selectAll.addActionListener(this);
         selectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
         edit.add(selectAll);
 
         menuBar.add(edit);
 
         JMenu helpMenu = new JMenu("Help");
+
         helpMenu.setFont(new Font("AERIAL", Font.PLAIN, 14));
 
-        JMenuItem help = new JMenuItem("Help");
-        help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
-        helpMenu.add(help);
+        JMenuItem about = new JMenuItem("About");
+        about.addActionListener(this);
+        about.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
+        helpMenu.add(about);
 
         menuBar.add(helpMenu);
 
@@ -133,6 +142,32 @@ public class Notepad extends JFrame implements ActionListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        else if(actionEvent.getActionCommand().equals("Print")) {
+            try{
+                area.print();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else if(actionEvent.getActionCommand().equals("Exit")) {
+            System.exit(0);
+        }
+        else if(actionEvent.getActionCommand().equals("Copy")) {
+            text = area.getSelectedText();
+        }
+        else if(actionEvent.getActionCommand().equals("Paste")) {
+            area.insert(text, area.getCaretPosition());
+        }
+        else if(actionEvent.getActionCommand().equals("Cut")) {
+            text = area.getSelectedText();
+            area.replaceRange("", area.getSelectionStart(), area.getSelectionEnd());
+        }
+        else if(actionEvent.getActionCommand().equals("SelectAll")) {
+            area.selectAll();
+        }
+        else if(actionEvent.getActionCommand().equals("About")) {
+            new About().setVisible(true);
         }
 
     }
